@@ -14,19 +14,18 @@ public class DataXSLT {
 	public DataXSLT(Connection con) {
 		setCon(con);
 	}
-
-	public ByteArrayOutputStream getData(String pathTemplate, Hashtable<String, String> pars) {		
-		getData(null, pathTemplate, pars);
-		return baData;
-	}
 	
-	public ByteArrayOutputStream getData(String query) {		
-		getData(query, null, null);
-		return baData;
-	}
-	
-	private void getData(String query, String pathTemplate, Hashtable<String, String> pars) {
+	public ByteArrayOutputStream getData(String query, String pathTemplate, Hashtable<String, String> pars,
+											String outputFileName) {
+		
 		baData = new ByteArrayOutputStream();
+		
+		if (query != null) {
+			if (query.trim().length() == 0) {
+				query = null;
+			}
+		}
+		
 		try {
 			DataProcessor dp = new DataProcessor();
 			dp.setConnection(con);
@@ -37,13 +36,18 @@ public class DataXSLT {
 				dp.setParameters(pars);
 			}
 			
-			dp.setOutput(baData);
+			if (outputFileName != null) {
+				dp.setOutput(outputFileName);
+			} else {
+				dp.setOutput(baData);
+			}
 			
 			dp.processData();
 		} catch (Exception e) {
 			System.err.println("Error in DataXSLT.getData(String query, "
-					+ "String pathTemplate, Hashtable<String, String> pars).");
+					+ "String pathTemplate, Hashtable<String, String> pars)." + e);
 		}
+		return baData;
 	}
 
 	public Connection getCon() {
