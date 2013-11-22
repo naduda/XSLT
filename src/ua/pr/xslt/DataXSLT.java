@@ -33,7 +33,9 @@ public class DataXSLT {
 				dp.setSql(query);
 			} else {
 				dp.setDataTemplate(pathTemplate);
-				dp.setParameters(pars);
+				if (pars != null) {
+					dp.setParameters(pars);
+				}
 			}
 			
 			if (outputFileName != null) {
